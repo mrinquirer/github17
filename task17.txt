@@ -1,1 +1,74 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+
+public class SnapdealLoginVerification {
+    public static void main(String[] args) {
+        // Set the path to the WebDriver executable
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+
+        // Initialize the WebDriver
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            // Open the Snapdeal website
+            driver.get("http://www.snapdeal.com");
+
+            // Maximize the browser window
+            driver.manage().window().maximize();
+
+            // Move the cursor to the Sign In button and hold it
+            WebElement signInButton = driver.findElement(By.xpath("//span[contains(text(),'Sign In')]"));
+            Actions actions = new Actions(driver);
+            actions.moveToElement(signInButton).perform();
+
+            // Click on the Sign In button
+            WebElement loginButton = driver.findElement(By.xpath("//a[contains(text(),'login')]"));
+            loginButton.click();
+
+            // Switch to the login iframe if present
+            WebElement loginFrame = driver.findElement(By.id("loginIframe"));
+            driver.switchTo().frame(loginFrame);
+
+            // Enter a valid Email Id in the Email Id field
+            WebElement emailField = driver.findElement(By.id("userName"));
+            emailField.sendKeys("dummyemail@example.com");
+
+            // Click on the Continue button
+            WebElement continueButton = driver.findElement(By.id("checkUser"));
+            continueButton.click();
+
+            // Wait for the password field to be visible
+            Thread.sleep(2000); // Adjust sleep time as needed
+
+            // Enter the valid password in the Password field
+            WebElement passwordField = driver.findElement(By.id("j_password_login_uc"));
+            passwordField.sendKeys("dummypassword");
+
+            // Click on the Login button
+            WebElement loginSubmitButton = driver.findElement(By.id("submitLoginUC"));
+            loginSubmitButton.click();
+
+            // Wait for the page to load after login
+            Thread.sleep(2000); // Adjust sleep time as needed
+
+            // Verify that the user is logged in successfully
+            WebElement userNameDisplay = driver.findElement(By.xpath("//span[@class='accountUserName col-xs-12 reset-padding']"));
+            if (userNameDisplay.isDisplayed()) {
+                System.out.println("Login successful: " + userNameDisplay.getText());
+            } else {
+                System.out.println("Login failed.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Close the browser instance
+            driver.quit();
+        }
+    }
+}
+
 
